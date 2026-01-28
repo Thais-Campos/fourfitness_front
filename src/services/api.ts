@@ -56,11 +56,15 @@ export interface BMIData {
   userId?: string;
 }
 
+<<<<<<< HEAD
 // Mock de autenticação - substitua pela lógica real do seu backend
+=======
+>>>>>>> thaishome
 const getCurrentUser = (): string | null => {
   return localStorage.getItem('userId') || 'mock-user-id';
 };
 
+<<<<<<< HEAD
 // Helper para headers
 const getHeaders = () => ({
   'Content-Type': 'application/json',
@@ -69,6 +73,15 @@ const getHeaders = () => ({
 });
 
 // === GOALS API ===
+=======
+
+const getHeaders = () => ({
+  'Content-Type': 'application/json',
+  
+});
+
+
+>>>>>>> thaishome
 
 export const goalsAPI = {
   // Listar todas as metas
@@ -323,7 +336,11 @@ export const workoutsAPI = {
   async toggleComplete(id: string): Promise<Workout> {
     try {
       const workout = await this.getById(id);
+<<<<<<< HEAD
       return await this.update(id, { concluido: !workout.concluido });
+=======
+      return await this.update(id, { completed: !workout.completed });
+>>>>>>> thaishome
     } catch (error) {
       console.error('API Error:', error);
       throw error;
