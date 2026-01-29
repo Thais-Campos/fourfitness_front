@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { metasAPI } from "../../../services/api";   // <-- ajuste aqui
 import { ClipLoader } from "react-spinners";
 import type Meta from "../../../models/Meta";
+import { showError, showSuccess } from "../../../utils/Toast";
 
 function DeletarMeta() {
   const navigate = useNavigate();
@@ -26,19 +27,20 @@ function DeletarMeta() {
     }
   }, [id]);
 
-  async function deletarMeta() {
-    setIsLoading(true);
+async function deletarMeta() {
+  setIsLoading(true);
 
-    try {
-      await metasAPI.delete(id!);   // <-- usa metasAPI
-      alert("Meta apagada com sucesso");
-    } catch {
-      alert("Erro ao deletar a meta.");
-    }
-
-    setIsLoading(false);
-    retornar();
+  try {
+    await metasAPI.delete(id!);
+    showSuccess("Meta apagada com sucesso");   // <-- toast sucesso
+  } catch {
+    showError("Erro ao deletar a meta.");      // <-- toast erro
   }
+
+  setIsLoading(false);
+  retornar();
+}
+
 
   function retornar() {
     navigate("/metas");

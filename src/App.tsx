@@ -5,9 +5,14 @@ import ListaMetas from "./components/meta/listarmeta/ListarMeta";
 import DeletarMeta from "./components/meta/deletarmeta/DeletarMeta";
 import { TreinosList } from "./components/treino/TreinosList";
 import Footer from "./components/footer/Footer";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 
 function App() {
   return (
+    <>
+    <ToastContainer />
     <BrowserRouter>
       <Navbar />
       <Routes>
@@ -18,6 +23,7 @@ function App() {
       </Routes>
       <Footer />
     </BrowserRouter>
+    </>
   );
 }
 

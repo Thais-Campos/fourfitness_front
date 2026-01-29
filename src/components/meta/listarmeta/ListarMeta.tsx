@@ -3,6 +3,7 @@ import { Target, Plus, Edit2, Trash2, Calendar, Loader } from "lucide-react";
 import { metasAPI } from "../../../services/api";
 import type Meta from "../../../models/Meta";
 import { FormMeta } from "../formmeta/FormMeta";
+import { showError, showSuccess } from "../../../utils/Toast";
 
 export default function ListaMetas() {
   const [metas, setMetas] = useState<Meta[]>([]);
@@ -26,32 +27,38 @@ export default function ListaMetas() {
     }
   };
 
-  const handleSave = async (meta: Meta) => {
+const handleSave = async (meta: Meta) => {
+  try {
+    if (meta.id && meta.id !== 0) {
+      await metasAPI.update(meta);
+      showSuccess("Meta atualizada com sucesso");   // <-- toast sucesso
+    } else {
+      await metasAPI.create(meta);
+      showSuccess("Meta criada com sucesso");       // <-- toast sucesso
+    }
+
+    await carregarMetas();
+    setShowForm(false);
+    setMetaEmEdicao(null);
+  } catch (error) {
+    showError("Erro ao salvar meta.");              // <-- toast erro
+  }
+};
+
+
+
+const excluirMeta = async (id: string) => {
+  if (confirm("Tem certeza que deseja excluir esta meta?")) {
     try {
-      if (meta.id && meta.id !== 0) {
-        await metasAPI.update(meta); // 🔥 id vai no body
-      } else {
-        await metasAPI.create(meta);
-      }
-
+      await metasAPI.delete(id);
+      showSuccess("Meta excluída com sucesso");     // <-- toast sucesso
       await carregarMetas();
-      setShowForm(false);
-      setMetaEmEdicao(null);
     } catch (error) {
-      console.error("Erro ao salvar meta:", error);
+      showError("Erro ao deletar meta.");           // <-- toast erro
     }
-  };
+  }
+};
 
-  const excluirMeta = async (id: string) => {
-    if (confirm("Tem certeza que deseja excluir esta meta?")) {
-      try {
-        await metasAPI.delete(id);
-        await carregarMetas();
-      } catch (error) {
-        console.error("Erro ao deletar meta:", error);
-      }
-    }
-  };
 
   const editarMeta = (meta: Meta) => {
     setMetaEmEdicao(meta);

@@ -10,6 +10,7 @@ import {
 import { workoutsAPI } from "../../services/api";
 import type { Workout as Treino } from "../../models/Workout";
 import { TreinoForm } from "./TreinoForm";
+import { showError, showSuccess } from "../../utils/Toast";
 
 export function TreinosList() {
   const [treinos, setTreinos] = useState<Treino[]>([]);
@@ -41,10 +42,10 @@ const adicionarTreino = async (treino: Treino) => {
       nivel: treino.nivel,
       duracao: treino.duracao,
     });
-
+    showSuccess("Treino criado com sucesso");       // <-- toast sucesso
     await carregarTreinos();
   } catch (error) {
-    console.error("Erro ao criar treino:", error);
+    showError("Erro ao criar treino.");             // <-- toast erro
   }
 };
 
@@ -56,18 +57,24 @@ const atualizarTreino = async (treino: Treino) => {
     );
     setTreinoEmEdicao(null);
     setShowForm(false);
+    showSuccess("Treino atualizado com sucesso");   // <-- toast sucesso
   } catch (error) {
-    console.error("Erro ao atualizar treino:", error);
+    showError("Erro ao atualizar treino.");         // <-- toast erro
   }
 };
-
 
 const excluirTreino = async (id: number) => {
   if (confirm("Excluir treino?")) {
-    await workoutsAPI.delete(id); 
-    await carregarTreinos();
+    try {
+      await workoutsAPI.delete(id);
+      showSuccess("Treino excluído com sucesso");   // <-- toast sucesso
+      await carregarTreinos();
+    } catch (error) {
+      showError("Erro ao excluir treino.");         // <-- toast erro
+    }
   }
 };
+
 
   const editarTreino = (treino: Treino) => {
     setTreinoEmEdicao(treino);
