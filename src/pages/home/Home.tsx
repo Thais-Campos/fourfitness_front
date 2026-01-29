@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  Target,
-  Dumbbell,
-  TrendingUp,
-  Activity,
-  Calculator,
-  Zap,
-  Award,
-} from "lucide-react";
-import { metasAPI, workoutsAPI, bmiAPI } from "../../services/api";
+import { Target, Dumbbell, TrendingUp, Activity, Calculator, Zap, Award } from "lucide-react";
+import { metasAPI, workoutsAPI } from "../../services/api";
 import type Meta from "../../models/Meta";
 import type { Workout } from "../../models/Workout";
 
@@ -129,7 +121,33 @@ export function Home() {
             </div>
             <h3 className="text-gray-400 font-semibold">Treinos Cadastrados</h3>
           </div>
+
+          <div className="group relative bg-zinc-900 rounded-3xl p-6 shadow-lg border border-orange-700/15 hover:shadow-xl transition-all hover:-translate-y-1">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-gradient-to-br from-orange-700 to-orange-800 rounded-2xl p-3 shadow-lg">
+                <Zap className="w-7 h-7 text-white" />
+              </div>
+              <span className="text-4xl font-bold bg-gradient-to-br from-orange-600 to-orange-700 bg-clip-text text-transparent">
+                {treinosSemana}
+              </span>
+            </div>
+            <h3 className="text-gray-400 font-semibold">Esta Semana</h3>
+          </div>
+
+          <div className="group relative bg-zinc-900 rounded-3xl p-6 shadow-lg border border-orange-700/15 hover:shadow-xl transition-all hover:-translate-y-1">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-gradient-to-br from-orange-700 to-orange-800 rounded-2xl p-3 shadow-lg">
+                <TrendingUp className="w-7 h-7 text-white" />
+              </div>
+              <span className="text-4xl font-bold bg-gradient-to-br from-orange-600 to-orange-700 bg-clip-text text-transparent">
+                {progressoMedio}%
+              </span>
+            </div>
+            <h3 className="text-gray-400 font-semibold">Progresso Médio</h3>
+          </div>
         </div>
+
+
 
         {/* BMI Calculator */}
         <div className="bg-zinc-900 rounded-3xl p-8 shadow-lg border border-orange-700/15 mb-10">
@@ -171,9 +189,14 @@ export function Home() {
 
             <button
               onClick={calcularIMC}
-              className="px-8 py-4 bg-gradient-to-r from-orange-700 to-orange-800 text-white rounded-xl font-semibold"
+              className="group px-8 py-4 bg-gradient-to-r from-orange-700 to-orange-800 
+                         text-white rounded-xl font-semibold hover:shadow-xl 
+                         hover:shadow-orange-900/30 transition-all hover:scale-105 active:scale-95 hover:cursor-pointer"
             >
-              Calcular IMC
+              <span className="flex items-center justify-center gap-2">
+                <Calculator className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                Calcular IMC
+              </span>
             </button>
           </div>
 
@@ -284,5 +307,6 @@ export function Home() {
         </div>
       </div>
     </div>
+
   );
 }

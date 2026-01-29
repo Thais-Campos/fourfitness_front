@@ -4,6 +4,7 @@ import { Home } from "./pages/home/Home";
 import ListaMetas from "./components/meta/listarmeta/ListarMeta";
 import DeletarMeta from "./components/meta/deletarmeta/DeletarMeta";
 import { TreinosList } from "./components/treino/TreinosList";
+import Footer from "./components/footer/Footer";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/deletarmeta/:id" element={<DeletarMeta />} />
         <Route path="/treinos" element={<TreinosList />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

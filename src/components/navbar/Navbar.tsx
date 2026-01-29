@@ -18,13 +18,9 @@ export default function Navbar() {
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-orange-700 to-orange-800 rounded-2xl blur-md opacity-0 group-hover:opacity-0 transition-opacity" />
-              
-              {/* <div className="w-10 h-10 bg-white-500/90 rounded-xl flex items-center justify-center shadow-sm"> */}
-              {/* <img src="https://ik.imagekit.io/f9nzlij8o/Design%20sem%20nome%20(2).png" alt="Logo Personalizada" className="w-20 h-20 object-contain rounded-full"/>  */}
-              {/* </div> */}
 
               <div className="w-20 h-20 bg-white500/90 rounded-2xl flex items-center justify-center shadow-md">
-              <img src="https://ik.imagekit.io/f9nzlij8o/Design%20sem%20nome%20(2).png" alt="Logo" className="w-20 h-20 object-contain rounded-lg" />
+                <img src="https://ik.imagekit.io/f9nzlij8o/Design%20sem%20nome%20(2).png" alt="Logo" className="w-20 h-20 object-contain rounded-lg" />
               </div>
 
             </div>
@@ -32,7 +28,7 @@ export default function Navbar() {
               <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent">
                 FourFitness
               </h1>
-              <p className="text-xs text-orange-700/70">Sua jornada fitness</p>
+              <p className="text-xs text-white">Sua jornada fitness</p>
             </div>
           </div>
 

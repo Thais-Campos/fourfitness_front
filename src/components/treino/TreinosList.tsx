@@ -131,10 +131,10 @@ const excluirTreino = async (id: number) => {
                 <div className="flex items-start justify-between mb-5">
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange-600 transition-colors">
-                      {treino.exercicio}
+                      {treino.divisao}
                     </h3>
                     <p className="text-sm text-gray-400">
-                      {treino.divisao} • {treino.nivel}
+                       • {treino.nivel}
                     </p>
                   </div>
                 </div>
