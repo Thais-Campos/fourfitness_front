@@ -1,73 +1,50 @@
-# React + TypeScript + Vite
+# 🏋️‍♀️ FourFitness – Front-End
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação front-end desenvolvida em **React + Vite + TypeScript**, focada no gerenciamento de metas e treinos personalizados.  
+Este projeto faz parte de um sistema **Full Stack**, com front-end e back-end desacoplados.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 Sobre o projeto
 
-## React Compiler
+O **FourFitness** é uma aplicação web voltada para organização de metas e treinos fitness, permitindo que o usuário:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Criar, editar e excluir metas
+- Visualizar metas cadastradas
+- Navegar entre diferentes telas de forma fluida
+- Ter feedback visual de ações (sucesso/erro)
+- Interagir com dados vindos de uma API REST
 
-## Expanding the ESLint configuration
+Projeto desenvolvido em **equipe**, no contexto de estudos e prática de desenvolvimento Full Stack, seguindo boas práticas de organização, componentização e tipagem.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Tecnologias utilizadas
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **React**
+- **Vite**
+- **TypeScript**
+- **React Router DOM**
+- **Axios**
+- **React Toastify**
+- **React Spinners**
+- **Tailwind CSS** (se aplicável)
+- **Netlify** (deploy)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 👩‍💻 Autoria
+Projeto desenvolvido em equipe, como parte de um projeto educacional.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Desenvolvimento Front-End
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Integração com APIs REST
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Organização de projeto React
+
+Boas práticas de código
+
+Preparação para deploy em produção
+
+
+
+
+
