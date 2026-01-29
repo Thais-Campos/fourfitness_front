@@ -20,16 +20,21 @@ export default function Navbar() {
               <div className="absolute inset-0 bg-gradient-to-br from-orange-700 to-orange-800 rounded-2xl blur-md opacity-0 group-hover:opacity-0 transition-opacity" />
 
               <div className="w-20 h-20 bg-white500/90 rounded-2xl flex items-center justify-center shadow-md">
-                <img src="https://ik.imagekit.io/f9nzlij8o/Design%20sem%20nome%20(2).png" alt="Logo" className="w-20 h-20 object-contain rounded-lg" />
+                <img
+                  src="https://ik.imagekit.io/f9nzlij8o/Design%20sem%20nome%20(2).png"
+                  alt="Logo"
+                  className="w-20 h-20 object-contain rounded-lg"
+                />
               </div>
-
             </div>
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent">
-                FourFitness
-              </h1>
-              <p className="text-xs text-white">Sua jornada fitness</p>
-            </div>
+            <Link to="/">
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent">
+                  FourFitness
+                </h1>
+                <p className="text-xs text-white">Sua jornada fitness</p>
+              </div>
+            </Link>
           </div>
 
           {/* Menu */}
@@ -44,14 +49,19 @@ export default function Navbar() {
                   to={item.path}
                   className={`
                     flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-200
-                    ${isActive
-                      ? "bg-gradient-to-r from-orange-700 to-orange-800 text-white shadow-lg shadow-orange-900/20 scale-105"
-                      : "text-gray-400 hover:bg-zinc-800 hover:text-orange-600 hover:scale-105"
+                    ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-700 to-orange-800 text-white shadow-lg shadow-orange-900/20 scale-105"
+                        : "text-gray-400 hover:bg-zinc-800 hover:text-orange-600 hover:scale-105"
                     }
                   `}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? "animate-pulse" : ""}`} />
-                  <span className="hidden sm:inline font-medium">{item.label}</span>
+                  <Icon
+                    className={`w-5 h-5 ${isActive ? "animate-pulse" : ""}`}
+                  />
+                  <span className="hidden sm:inline font-medium">
+                    {item.label}
+                  </span>
                 </Link>
               );
             })}
