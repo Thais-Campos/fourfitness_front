@@ -15,8 +15,11 @@ export const metasAPI = {
 export const workoutsAPI = {
   getAll: async () => (await api.get("/treinos")).data,
   create: async (treino: any) => (await api.post("/treinos", treino)).data,
-  update: async (id: string, treino: any) => (await api.put(`/treinos/${id}`, treino)).data,
-  delete: async (id: string) => (await api.delete(`/treinos/${id}`)).data,
+  update: async (id: number, treino: any) =>
+  (await api.put(`/treinos/${id}`, treino)).data,
+
+  delete: async (id: number) => (await api.delete(`/treinos/${id}`)).data,
+
   toggleComplete: async (id: string) => (await api.patch(`/treinos/${id}/toggle`)).data,
 };
 

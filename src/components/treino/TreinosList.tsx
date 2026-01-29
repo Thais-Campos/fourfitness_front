@@ -4,11 +4,7 @@ import {
   Plus,
   Edit2,
   Trash2,
-  CheckCircle,
-  Circle,
   Loader,
-  Activity,
-  Calendar,
   Clock,
 } from "lucide-react";
 import { workoutsAPI } from "../../services/api";
@@ -19,7 +15,6 @@ export function TreinosList() {
   const [treinos, setTreinos] = useState<Treino[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [treinoEmEdicao, setTreinoEmEdicao] = useState<Treino | null>(null);
-  const [filter, setFilter] = useState<"all" | "completed" | "pending">("all");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,26 +39,34 @@ export function TreinosList() {
     setShowForm(false);
   };
 
-  const atualizarTreino = async (treino: Omit<Treino, "id">) => {
-    if (treinoEmEdicao) {
-      await workoutsAPI.update(treinoEmEdicao.id, treino);
-      await carregarTreinos();
-      setTreinoEmEdicao(null);
-      setShowForm(false);
-    }
-  };
+const atualizarTreino = async (treino: Omit<Treino, "id">) => {
+  if (!treinoEmEdicao) return; // segurança extra
 
-  const excluirTreino = async (id: string) => {
-    if (confirm("Excluir treino?")) {
-      await workoutsAPI.delete(id);
-      await carregarTreinos();
-    }
-  };
+  try {
+    const atualizado = await workoutsAPI.update(treinoEmEdicao.id, treino);
 
-  const alternarConcluido = async (id: string) => {
-    await workoutsAPI.toggleComplete(id);
+    console.log("Resposta do backend:", atualizado);
+
+    setTreinos((prev) =>
+      prev.map((t) => (t.id === atualizado.id ? atualizado : t))
+    );
+
+    setTreinoEmEdicao(null);
+    setShowForm(false); // fecha o modal
+  } catch (error) {
+    console.error("Erro ao atualizar treino:", error);
+  }
+};
+
+
+
+
+const excluirTreino = async (id: number) => {
+  if (confirm("Excluir treino?")) {
+    await workoutsAPI.delete(id); 
     await carregarTreinos();
-  };
+  }
+};
 
   const editarTreino = (treino: Treino) => {
     setTreinoEmEdicao(treino);
@@ -74,12 +77,6 @@ export function TreinosList() {
     setShowForm(false);
     setTreinoEmEdicao(null);
   };
-
-  const filteredTreinos = treinos.filter((t) => {
-    if (filter === "completed") return t.concluido;
-    if (filter === "pending") return !t.concluido;
-    return true;
-  });
 
   if (loading) {
     return (
@@ -95,6 +92,7 @@ export function TreinosList() {
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div>
             <div className="flex items-center gap-4 mb-3">
@@ -121,130 +119,36 @@ export function TreinosList() {
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-8">
-          <button
-            onClick={() => setFilter("all")}
-            className={`px-5 py-2.5 rounded-xl font-semibold transition-all ${
-              filter === "all"
-                ? "bg-gradient-to-r from-orange-700 to-orange-800 text-white shadow-lg shadow-orange-900/20"
-                : "bg-zinc-900 text-gray-400 hover:bg-zinc-800 border border-orange-700/15"
-            }`}
-          >
-            Todos <span className="ml-1.5 opacity-80">({treinos.length})</span>
-          </button>
-          <button
-            onClick={() => setFilter("pending")}
-            className={`px-5 py-2.5 rounded-xl font-semibold transition-all ${
-              filter === "pending"
-                ? "bg-gradient-to-r from-orange-700 to-orange-800 text-white shadow-lg shadow-orange-900/20"
-                : "bg-zinc-900 text-gray-400 hover:bg-zinc-800 border border-orange-700/15"
-            }`}
-          >
-            Pendentes{" "}
-            <span className="ml-1.5 opacity-80">
-              ({treinos.filter((t) => !t.concluido).length})
-            </span>
-          </button>
-          <button
-            onClick={() => setFilter("completed")}
-            className={`px-5 py-2.5 rounded-xl font-semibold transition-all ${
-              filter === "completed"
-                ? "bg-gradient-to-r from-orange-700 to-orange-800 text-white shadow-lg shadow-orange-900/20"
-                : "bg-zinc-900 text-gray-400 hover:bg-zinc-800 border border-orange-700/15"
-            }`}
-          >
-            Completos{" "}
-            <span className="ml-1.5 opacity-80">
-              ({treinos.filter((t) => t.concluido).length})
-            </span>
-          </button>
-        </div>
-
-        {filteredTreinos.length > 0 ? (
+        {treinos.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTreinos.map((treino) => (
+            {treinos.map((treino) => (
               <div
                 key={treino.id}
-                className={`group bg-zinc-900 rounded-3xl p-7 shadow-lg border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
-                  treino.concluido
-                    ? "border-green-600/25 shadow-green-900/10"
-                    : "border-orange-700/15 shadow-orange-900/10"
-                } hover:border-orange-700/30`}
+                className="group bg-zinc-900 rounded-3xl p-7 shadow-lg border border-orange-700/15 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
+                {/* Header */}
                 <div className="flex items-start justify-between mb-5">
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange-600 transition-colors">
-                      {treino.nome}
+                      {treino.exercicio}
                     </h3>
-                    {treino.descricao && (
-                      <p className="text-sm text-gray-400 line-clamp-2">
-                        {treino.descricao}
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => alternarConcluido(treino.id)}
-                    className="ml-2 transition-transform hover:scale-110"
-                  >
-                    {treino.concluido ? (
-                      <CheckCircle className="w-7 h-7 text-green-500 drop-shadow-lg" />
-                    ) : (
-                      <Circle className="w-7 h-7 text-zinc-700 hover:text-orange-600" />
-                    )}
-                  </button>
-                </div>
-
-                <div className="space-y-3 mb-5">
-                  <div className="flex items-center gap-3 p-3 bg-zinc-800 rounded-xl border border-orange-700/15">
-                    <div className="p-2 bg-zinc-900 rounded-lg">
-                      <Clock className="w-4 h-4 text-orange-600" />
-                    </div>
-                    <span className="text-sm font-semibold text-gray-300">
-                      {treino.duracao} minutos
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-zinc-800 rounded-xl border border-orange-700/15">
-                    <div className="p-2 bg-zinc-900 rounded-lg">
-                      <Calendar className="w-4 h-4 text-orange-600" />
-                    </div>
-                    <span className="text-sm font-semibold text-gray-300">
-                      {new Date(treino.data).toLocaleDateString("pt-BR", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </span>
+                    <p className="text-sm text-gray-400">
+                      {treino.divisao} • {treino.nivel}
+                    </p>
                   </div>
                 </div>
 
-                {treino.exercicios && treino.exercicios.length > 0 && (
-                  <div className="mb-5 p-4 bg-zinc-800 rounded-xl border border-orange-700/15">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Activity className="w-4 h-4 text-orange-600" />
-                      <p className="text-sm font-semibold text-gray-300">
-                        Exercícios:
-                      </p>
-                    </div>
-                    <ul className="space-y-2">
-                      {treino.exercicios.slice(0, 3).map((ex, idx) => (
-                        <li
-                          key={idx}
-                          className="text-sm text-gray-400 flex items-start gap-2"
-                        >
-                          <span className="text-orange-600 mt-0.5">●</span>
-                          <span className="flex-1">{ex.name}</span>
-                        </li>
-                      ))}
-                      {treino.exercicios.length > 3 && (
-                        <li className="text-sm text-orange-600 italic font-medium">
-                          +{treino.exercicios.length - 3} mais...
-                        </li>
-                      )}
-                    </ul>
+                {/* Duração */}
+                <div className="mb-5 p-4 bg-zinc-800 rounded-xl border border-orange-700/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="w-4 h-4 text-orange-600" />
+                    <p className="text-xs font-semibold text-gray-400">Duração</p>
                   </div>
-                )}
+                  <p className="text-sm font-bold text-white">{treino.duracao}</p>
+                </div>
 
-                <div className="flex gap-3 pt-5 border-t border-zinc-800">
+                {/* Actions */}
+                <div className="flex gap-3">
                   <button
                     onClick={() => editarTreino(treino)}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-700/20 text-orange-600 rounded-xl hover:bg-orange-700/30 transition-all font-medium border border-orange-700/30"
@@ -263,33 +167,25 @@ export function TreinosList() {
             ))}
           </div>
         ) : (
-          <div className="bg-zinc-900 rounded-3xl p-16 shadow-lg shadow-orange-900/10 border border-orange-700/15 text-center">
+          <div className="bg-zinc-900 rounded-3xl p-16 shadow-lg border border-orange-700/15 text-center">
             <div className="max-w-md mx-auto">
               <div className="relative mb-6">
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-700/15 to-orange-800/15 rounded-full blur-3xl" />
                 <Dumbbell className="relative w-20 h-20 text-zinc-700 mx-auto" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-3">
-                {filter === "all"
-                  ? "Nenhum treino cadastrado"
-                  : `Nenhum treino ${
-                      filter === "completed" ? "completo" : "pendente"
-                    }`}
+                Nenhum treino cadastrado
               </h3>
               <p className="text-gray-400 mb-8">
-                {filter === "all"
-                  ? "Comece criando seu primeiro treino!"
-                  : "Tente outro filtro para ver seus treinos"}
+                Comece criando seu primeiro treino!
               </p>
-              {filter === "all" && (
-                <button
-                  onClick={() => setShowForm(true)}
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-700 to-orange-800 text-white rounded-xl font-semibold hover:shadow-xl hover:shadow-orange-900/30 transition-all hover:scale-105 active:scale-95"
-                >
-                  <Plus className="w-5 h-5" />
-                  Criar Primeiro Treino
-                </button>
-              )}
+              <button
+                onClick={() => setShowForm(true)}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-700 to-orange-800 text-white rounded-xl font-semibold hover:shadow-xl hover:shadow-orange-900/30 transition-all hover:scale-105 active:scale-95"
+              >
+                <Plus className="w-5 h-5" />
+                Criar Primeiro Treino
+              </button>
             </div>
           </div>
         )}

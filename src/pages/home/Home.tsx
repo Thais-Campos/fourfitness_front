@@ -30,7 +30,6 @@ export function Home() {
       setMetas(metasData);
       setTreinos(treinosData);
 
-      // Carregar IMC do localStorage
       const storedBMI = localStorage.getItem("bmi");
       if (storedBMI) {
         const bmiData = JSON.parse(storedBMI);
@@ -60,51 +59,22 @@ export function Home() {
     }
   };
 
-  const metasAtivas = metas; 
-  const treinosConcluidos = treinos.filter((t) => t.concluido).length;
-  const treinosSemana = treinos.filter((t) => {
-    const date = new Date(t.data);
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    return date >= weekAgo;
-  }).length;
-
-  
-  const progressoMedio = metas.length;
+  const metasAtivas = metas;
 
   const getBMICategory = (bmi: number) => {
     if (bmi < 18.5)
-      return {
-        label: "Abaixo do peso",
-        color: "text-blue-400",
-        bg: "bg-blue-500/10",
-        border: "border-blue-500/30",
-      };
+      return { label: "Abaixo do peso", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/30" };
     if (bmi < 25)
-      return {
-        label: "Peso normal",
-        color: "text-green-400",
-        bg: "bg-green-500/10",
-        border: "border-green-500/30",
-      };
+      return { label: "Peso normal", color: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/30" };
     if (bmi < 30)
-      return {
-        label: "Sobrepeso",
-        color: "text-yellow-400",
-        bg: "bg-yellow-500/10",
-        border: "border-yellow-500/30",
-      };
-    return {
-      label: "Obesidade",
-      color: "text-red-400",
-      bg: "bg-red-500/10",
-      border: "border-red-500/30",
-    };
+      return { label: "Sobrepeso", color: "text-yellow-400", bg: "bg-yellow-500/10", border: "border-yellow-500/30" };
+    return { label: "Obesidade", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/30" };
   };
 
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-3">
             <div className="h-1 w-12 bg-gradient-to-r from-orange-700 to-orange-800 rounded-full animate-pulse" />
@@ -116,11 +86,11 @@ export function Home() {
             </h1>
           </div>
           <p className="text-lg text-gray-400">
-            Sua plataforma acessível e inclusiva. Vá, treine e volte para sua
-            vida! 🔥
+            Sua plataforma acessível e inclusiva. Vá, treine e volte para sua vida! 🔥
           </p>
         </div>
 
+        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <div className="group relative bg-zinc-900 rounded-3xl p-6 shadow-lg border border-orange-700/15 hover:shadow-xl transition-all hover:-translate-y-1">
             <div className="flex items-center justify-between mb-4">
@@ -140,37 +110,14 @@ export function Home() {
                 <Dumbbell className="w-7 h-7 text-white" />
               </div>
               <span className="text-4xl font-bold bg-gradient-to-br from-orange-600 to-orange-700 bg-clip-text text-transparent">
-                {treinosConcluidos}
+                {treinos.length}
               </span>
             </div>
-            <h3 className="text-gray-400 font-semibold">Treinos Concluídos</h3>
-          </div>
-
-          <div className="group relative bg-zinc-900 rounded-3xl p-6 shadow-lg border border-orange-700/15 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-gradient-to-br from-orange-700 to-orange-800 rounded-2xl p-3 shadow-lg">
-                <Zap className="w-7 h-7 text-white" />
-              </div>
-              <span className="text-4xl font-bold bg-gradient-to-br from-orange-600 to-orange-700 bg-clip-text text-transparent">
-                {treinosSemana}
-              </span>
-            </div>
-            <h3 className="text-gray-400 font-semibold">Esta Semana</h3>
-          </div>
-
-          <div className="group relative bg-zinc-900 rounded-3xl p-6 shadow-lg border border-orange-700/15 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-gradient-to-br from-orange-700 to-orange-800 rounded-2xl p-3 shadow-lg">
-                <TrendingUp className="w-7 h-7 text-white" />
-              </div>
-              <span className="text-4xl font-bold bg-gradient-to-br from-orange-600 to-orange-700 bg-clip-text text-transparent">
-                {progressoMedio}%
-              </span>
-            </div>
-            <h3 className="text-gray-400 font-semibold">Progresso Médio</h3>
+            <h3 className="text-gray-400 font-semibold">Treinos Cadastrados</h3>
           </div>
         </div>
 
+        {/* BMI Calculator */}
         <div className="bg-zinc-900 rounded-3xl p-8 shadow-lg border border-orange-700/15 mb-10">
           <div className="flex items-center gap-4 mb-8">
             <div className="relative">
@@ -180,79 +127,52 @@ export function Home() {
               </div>
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-white">
-                Calculadora de IMC
-              </h2>
-              <p className="text-gray-400">
-                Acompanhe seu índice de massa corporal
-              </p>
+              <h2 className="text-3xl font-bold text-white">Calculadora de IMC</h2>
+              <p className="text-gray-400">Acompanhe seu índice de massa corporal</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end mb-6">
             <div>
-              <label className="block font-semibold text-gray-300 mb-3">
-                Peso (kg)
-              </label>
+              <label className="block font-semibold text-gray-300 mb-3">Peso (kg)</label>
               <input
                 type="number"
                 value={peso}
                 onChange={(e) => setPeso(e.target.value)}
                 placeholder="70"
-                className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
-                           focus:ring-2 focus:ring-orange-700 focus:border-orange-700 
-                           outline-none transition-all bg-zinc-800 text-white placeholder-gray-500"
+                className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 bg-zinc-800 text-white"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-300 mb-3">
-                Altura (m)
-              </label>
+              <label className="block font-semibold text-gray-300 mb-3">Altura (m)</label>
               <input
                 type="number"
                 value={altura}
                 onChange={(e) => setAltura(e.target.value)}
                 placeholder="1.70"
-                className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
-                           focus:ring-2 focus:ring-orange-700 focus:border-orange-700 
-                           outline-none transition-all bg-zinc-800 text-white placeholder-gray-500"
+                className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 bg-zinc-800 text-white"
               />
             </div>
 
             <button
               onClick={calcularIMC}
-              className="group px-8 py-4 bg-gradient-to-r from-orange-700 to-orange-800 
-                         text-white rounded-xl font-semibold hover:shadow-xl 
-                         hover:shadow-orange-900/30 transition-all hover:scale-105 active:scale-95"
+              className="px-8 py-4 bg-gradient-to-r from-orange-700 to-orange-800 text-white rounded-xl font-semibold"
             >
-              <span className="flex items-center justify-center gap-2">
-                <Calculator className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                Calcular IMC
-              </span>
+              Calcular IMC
             </button>
           </div>
 
           {imc !== null && (
-            <div
-              className={`p-8 rounded-2xl border-2 ${getBMICategory(imc).border} ${getBMICategory(imc).bg} transition-all`}
-            >
+            <div className={`p-8 rounded-2xl border-2 ${getBMICategory(imc).border} ${getBMICategory(imc).bg}`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-400 mb-2 font-medium">
-                    Seu IMC
-                  </p>
-                  <p className="text-5xl font-bold text-white">
-                    {imc.toFixed(1)}
-                  </p>
+                  <p className="text-sm text-gray-400 mb-2">Seu IMC</p>
+                  <p className="text-5xl font-bold text-white">{imc.toFixed(1)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-400 mb-2 font-medium">
-                    Categoria
-                  </p>
-                  <p
-                    className={`text-2xl font-bold ${getBMICategory(imc).color}`}
-                  >
+                  <p className="text-sm text-gray-400 mb-2">Categoria</p>
+  <p className={`text-2xl font-bold ${getBMICategory(imc).color}`}>
                     {getBMICategory(imc).label}
                   </p>
                 </div>
@@ -261,7 +181,9 @@ export function Home() {
           )}
         </div>
 
+        {/* Quick Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Metas Recentes */}
           <div className="bg-zinc-900 rounded-3xl p-8 shadow-lg border border-orange-700/15">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
               <div className="p-2 bg-orange-700/20 rounded-xl">
@@ -281,9 +203,7 @@ export function Home() {
                         {meta.objetivo}
                       </h3>
                       {meta.descricao && (
-                        <p className="text-sm text-gray-500 mt-1">
-                          {meta.descricao}
-                        </p>
+                        <p className="text-sm text-gray-500 mt-1">{meta.descricao}</p>
                       )}
                     </div>
                     {meta.validade && (
@@ -301,13 +221,12 @@ export function Home() {
             ) : (
               <div className="text-center py-12">
                 <Award className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                <p className="text-gray-500">
-                  Nenhuma meta ativa. Crie sua primeira meta!
-                </p>
+                <p className="text-gray-500">Nenhuma meta ativa. Crie sua primeira meta!</p>
               </div>
             )}
           </div>
-          
+
+          {/* Últimos Treinos */}
           <div className="bg-zinc-900 rounded-3xl p-8 shadow-lg border border-orange-700/15">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
               <div className="p-2 bg-orange-700/20 rounded-xl">
@@ -328,28 +247,23 @@ export function Home() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-white group-hover:text-orange-600 transition-colors">
-                          {treino.nome}
+                          {treino.exercicio}
                         </h3>
                         <p className="text-sm text-gray-400">
-                          {treino.duracao} minutos
+                          {treino.divisao} • {treino.nivel}
+                        </p>
+                        <p className="text-sm text-gray-400">
+                          Duração: {treino.duracao}
                         </p>
                       </div>
                     </div>
-                    {treino.concluido && (
-                      <span className="flex items-center gap-1 text-green-400 font-semibold text-sm bg-green-500/20 px-3 py-1.5 rounded-lg border border-green-500/30">
-                        <Award className="w-4 h-4" />
-                        Completo
-                      </span>
-                    )}
                   </div>
                 ))}
               </div>
             ) : (
               <div className="text-center py-12">
                 <Dumbbell className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                <p className="text-gray-500">
-                  Nenhum treino cadastrado. Adicione seu primeiro treino!
-                </p>
+                <p className="text-gray-500">Nenhum treino cadastrado. Adicione seu primeiro treino!</p>
               </div>
             )}
           </div>
