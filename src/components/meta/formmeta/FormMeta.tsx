@@ -4,27 +4,21 @@ import type Meta from "../../../models/Meta";
 
 interface FormMetaProps {
   meta: Meta | null;
-  onSave: (meta: Omit<Meta, "id">) => void;
+  onSave: (meta: Meta) => void;
   onClose: () => void;
 }
 
 export function FormMeta({ meta, onSave, onClose }: FormMetaProps) {
   const [formData, setFormData] = useState({
-    objetivo: "",
-    descricao: "",
-    peso: "",
-    altura: "",
-    validade: "",
+    meta: "",
+    data_limite: "",
   });
 
   useEffect(() => {
     if (meta) {
       setFormData({
-        objetivo: meta.objetivo,
-        descricao: meta.descricao || "",
-        peso: meta.peso.toString(),
-        altura: meta.altura.toString(),
-        validade: meta.validade || "",
+        meta: meta.meta,
+        data_limite: meta.data_limite || "",
       });
     }
   }, [meta]);
@@ -32,17 +26,16 @@ export function FormMeta({ meta, onSave, onClose }: FormMetaProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const metaFinal: Omit<Meta, "id"> = {
-      objetivo: formData.objetivo,
-      descricao: formData.descricao,
-      peso: parseFloat(formData.peso),
-      altura: parseFloat(formData.altura),
-      validade: formData.validade,
+    const metaFinal: Meta = {
+      id: meta?.id ?? 0,
+      meta: formData.meta,
+      data_limite: formData.data_limite,
       treino: null,
     };
 
     onSave(metaFinal);
   };
+
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -51,7 +44,6 @@ export function FormMeta({ meta, onSave, onClose }: FormMetaProps) {
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-zinc-900 rounded-3xl shadow-2xl border border-orange-700/15 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="flex items-center justify-between px-8 py-6 border-b border-orange-700/25">
           <div className="flex items-center gap-3">
             <Target className="w-6 h-6 text-white" />
@@ -67,64 +59,19 @@ export function FormMeta({ meta, onSave, onClose }: FormMetaProps) {
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           <div>
             <label className="block font-semibold text-gray-300 mb-3">
-              Objetivo *
+              meta *
             </label>
             <input
               type="text"
               required
-              value={formData.objetivo}
-              onChange={(e) => handleChange("objetivo", e.target.value)}
+              value={formData.meta}
+              onChange={(e) => handleChange("meta", e.target.value)}
               placeholder="Ex: Perder peso, Ganhar massa..."
               className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 bg-zinc-800 text-white"
             />
-          </div>
-
-          <div>
-            <label className="block font-semibold text-gray-300 mb-3">
-              Descrição
-            </label>
-            <textarea
-              value={formData.descricao}
-              onChange={(e) => handleChange("descricao", e.target.value)}
-              placeholder="Detalhe sua meta..."
-              rows={3}
-              className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 bg-zinc-800 text-white"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label className="block font-semibold text-gray-300 mb-3">
-                Peso (kg) *
-              </label>
-              <input
-                type="number"
-                required
-                value={formData.peso}
-                onChange={(e) => handleChange("peso", e.target.value)}
-                placeholder="70"
-                className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 bg-zinc-800 text-white"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-gray-300 mb-3">
-                Altura (m) *
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                required
-                value={formData.altura}
-                onChange={(e) => handleChange("altura", e.target.value)}
-                placeholder="1.70"
-                className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 bg-zinc-800 text-white"
-              />
-            </div>
           </div>
 
           <div>
@@ -134,13 +81,12 @@ export function FormMeta({ meta, onSave, onClose }: FormMetaProps) {
             </label>
             <input
               type="date"
-              value={formData.validade}
-              onChange={(e) => handleChange("validade", e.target.value)}
+              value={formData.data_limite}
+              onChange={(e) => handleChange("data_limite", e.target.value)}
               className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 bg-zinc-800 text-white"
             />
           </div>
 
-          {/* Actions */}
           <div className="flex gap-4 pt-6">
             <button
               type="button"

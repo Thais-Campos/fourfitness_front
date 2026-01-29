@@ -1,11 +1,8 @@
+import type { Workout } from "./Workout";
+
 export default interface Meta {
   id: number;
-  objetivo: string;
-  descricao: string;
-  peso: number;
-  altura: number;
-  validade: string; 
-  treino: any | null;
-  imc?: number;
-  classificacao?: string;
+  meta: string;
+  data_limite: string
+  treino?: Workout | null;
 }

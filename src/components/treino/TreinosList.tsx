@@ -33,26 +33,36 @@ export function TreinosList() {
     }
   };
 
-  const adicionarTreino = async (treino: Omit<Treino, "id">) => {
-    await workoutsAPI.create(treino);
-    await carregarTreinos();
-    setShowForm(false);
-  };
-
-const atualizarTreino = async (treino: Omit<Treino, "id">) => {
-  if (!treinoEmEdicao) return; // segurança extra
-
+const adicionarTreino = async (treino: Treino) => {
   try {
-    const atualizado = await workoutsAPI.update(treinoEmEdicao.id, treino);
+    await workoutsAPI.create({
+      exercicio: treino.exercicio,
+      divisao: treino.divisao,
+      nivel: treino.nivel,
+      duracao: treino.duracao,
+    });
 
-    console.log("Resposta do backend:", atualizado);
+    await carregarTreinos();
+  } catch (error) {
+    console.error("Erro ao criar treino:", error);
+  }
+};
+
+const atualizarTreino = async (treino: Treino) => {
+  try {
+    const atualizado = await workoutsAPI.update(treino.id, {
+      exercicio: treino.exercicio,
+      divisao: treino.divisao,
+      nivel: treino.nivel,
+      duracao: treino.duracao,
+    });
 
     setTreinos((prev) =>
       prev.map((t) => (t.id === atualizado.id ? atualizado : t))
     );
 
     setTreinoEmEdicao(null);
-    setShowForm(false); // fecha o modal
+    setShowForm(false);
   } catch (error) {
     console.error("Erro ao atualizar treino:", error);
   }
@@ -190,13 +200,12 @@ const excluirTreino = async (id: number) => {
           </div>
         )}
 
-        {showForm && (
-          <TreinoForm
-            treino={treinoEmEdicao}
-            onSave={treinoEmEdicao ? atualizarTreino : adicionarTreino}
-            onClose={fecharForm}
-          />
-        )}
+<TreinoForm
+  treino={treinoEmEdicao}
+  onSave={treinoEmEdicao ? atualizarTreino : adicionarTreino}
+  onClose={fecharForm}
+/>
+
       </div>
     </div>
   );

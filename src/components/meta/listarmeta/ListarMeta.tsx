@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Target,
-  Plus,
-  Edit2,
-  Trash2,
-  Calendar,
-  Loader,
-} from "lucide-react";
+import { Target, Plus, Edit2, Trash2, Calendar, Loader } from "lucide-react";
 import { metasAPI } from "../../../services/api";
 import type Meta from "../../../models/Meta";
 import { FormMeta } from "../formmeta/FormMeta";
@@ -33,26 +26,19 @@ export default function ListaMetas() {
     }
   };
 
-  const adicionarMeta = async (meta: Omit<Meta, "id">) => {
+  const handleSave = async (meta: Meta) => {
     try {
-      await metasAPI.create(meta);
+      if (meta.id && meta.id !== 0) {
+        await metasAPI.update(meta); // 🔥 id vai no body
+      } else {
+        await metasAPI.create(meta);
+      }
+
       await carregarMetas();
       setShowForm(false);
+      setMetaEmEdicao(null);
     } catch (error) {
-      console.error("Erro ao criar meta:", error);
-    }
-  };
-
-  const atualizarMeta = async (meta: Omit<Meta, "id">) => {
-    if (metaEmEdicao) {
-      try {
-        await metasAPI.update(metaEmEdicao.id, meta);
-        await carregarMetas();
-        setMetaEmEdicao(null);
-        setShowForm(false);
-      } catch (error) {
-        console.error("Erro ao atualizar meta:", error);
-      }
+      console.error("Erro ao salvar meta:", error);
     }
   };
 
@@ -91,7 +77,6 @@ export default function ListaMetas() {
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div>
             <div className="flex items-center gap-4 mb-3">
@@ -118,7 +103,6 @@ export default function ListaMetas() {
           </button>
         </div>
 
-        {/* Grid */}
         {metas.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {metas.map((meta) => (
@@ -126,29 +110,22 @@ export default function ListaMetas() {
                 key={meta.id}
                 className="group bg-zinc-900 rounded-3xl p-7 shadow-lg shadow-orange-900/10 border border-orange-700/15 hover:shadow-xl hover:shadow-orange-800/15 transition-all duration-300 hover:-translate-y-1 hover:border-orange-700/30"
               >
-                {/* Header */}
                 <div className="flex items-start justify-between mb-5">
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange-600 transition-colors">
-                      {meta.objetivo}
+                      {meta.meta}
                     </h3>
-                    {meta.descricao && (
-                      <p className="text-sm text-gray-400 line-clamp-2">
-                        {meta.descricao}
-                      </p>
-                    )}
                   </div>
                 </div>
 
-                {/* Prazo */}
-                {meta.validade && (
+                {meta.data_limite && (
                   <div className="mb-5 p-4 bg-zinc-800 rounded-xl border border-orange-700/20">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="w-4 h-4 text-orange-600" />
                       <p className="text-xs font-semibold text-gray-400">Prazo</p>
                     </div>
                     <p className="text-sm font-bold text-white">
-                      {new Date(meta.validade).toLocaleDateString("pt-BR", {
+                      {new Date(meta.data_limite).toLocaleDateString("pt-BR", {
                         day: "2-digit",
                         month: "long",
                         year: "numeric",
@@ -157,7 +134,6 @@ export default function ListaMetas() {
                   </div>
                 )}
 
-                {/* Actions */}
                 <div className="flex gap-3">
                   <button
                     onClick={() => editarMeta(meta)}
@@ -200,11 +176,10 @@ export default function ListaMetas() {
           </div>
         )}
 
-        {/* Form Modal */}
         {showForm && (
           <FormMeta
             meta={metaEmEdicao}
-            onSave={metaEmEdicao ? atualizarMeta : adicionarMeta}
+            onSave={handleSave}
             onClose={fecharForm}
           />
         )}

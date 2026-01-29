@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { X, Plus, Trash2, Dumbbell, Clock, Activity } from "lucide-react";
 import type { Workout as Treino } from "../../models/Workout";
+import { workoutsAPI } from "../../services/api";
 
 interface TreinoFormProps {
   treino: Treino | null;
-  onSave: (treino: Omit<Treino, "id">) => void;
+  onSave: (treino: Treino) => void;
   onClose: () => void;
 }
-
 
 export function TreinoForm({ treino, onSave, onClose }: TreinoFormProps) {
   const [dadosForm, setDadosForm] = useState({
@@ -19,42 +19,31 @@ export function TreinoForm({ treino, onSave, onClose }: TreinoFormProps) {
 
   const [exercicios, setExercicios] = useState<string[]>([""]);
 
- useEffect(() => {
-  if (treino) {
-    setDadosForm({
-      exercicio: treino.exercicio,
-      divisao: treino.divisao,
-      nivel: treino.nivel,
-      duracao: treino.duracao.slice(0, 2), // "30" vindo de "30:00:00"
-    });
-  }
-}, [treino]);
-
+  useEffect(() => {
+    if (treino) {
+      setDadosForm({
+        exercicio: treino.exercicio,
+        divisao: treino.divisao,
+        nivel: treino.nivel,
+        duracao: treino.duracao.slice(0, 2), // "30" vindo de "30:00:00"
+      });
+    }
+  }, [treino]);
 
 const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
 
-  const treinoFinal: Omit<Treino, "id"> = {
+  const treinoFinal: Treino = {
+    id: treino?.id ?? 0,
     exercicio: dadosForm.exercicio,
     divisao: dadosForm.divisao,
     nivel: dadosForm.nivel,
     duracao: `${String(dadosForm.duracao).padStart(2, "0")}:00:00`,
   };
 
-  console.log("Payload enviado para backend:", treinoFinal);
-
   onSave(treinoFinal);
+  onClose();
 };
-
-
-onSave({
-  exercicio: dadosForm.exercicio,
-  divisao: dadosForm.divisao,
-  nivel: dadosForm.nivel,
-  duracao: `${String(dadosForm.duracao).padStart(2, "0")}:00:00`,
-});
-
-
 
   const handleChange = (campo: string, valor: string | boolean) => {
     setDadosForm((prev) => ({ ...prev, [campo]: valor }));
@@ -89,105 +78,105 @@ onSave({
           </button>
         </div>
 
-       <form onSubmit={handleSubmit} className="p-8 space-y-6">
-  {/* EXERCÍCIO */}
-  <div>
-    <label className="flex items-center gap-2 font-semibold text-gray-300 mb-3">
-      <Dumbbell className="w-4 h-4 text-orange-600" />
-      Exercícios *
-    </label>
-    <textarea
-      required
-      value={dadosForm.exercicio}
-      onChange={(e) => handleChange("exercicio", e.target.value)}
-      placeholder="Ex: Agachamento, Leg Press, Stiff"
-      rows={3}
-      className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
+        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+          {/* EXERCÍCIO */}
+          <div>
+            <label className="flex items-center gap-2 font-semibold text-gray-300 mb-3">
+              <Dumbbell className="w-4 h-4 text-orange-600" />
+              Exercícios *
+            </label>
+            <textarea
+              required
+              value={dadosForm.exercicio}
+              onChange={(e) => handleChange("exercicio", e.target.value)}
+              placeholder="Ex: Agachamento, Leg Press, Stiff"
+              rows={3}
+              className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
                  focus:ring-2 focus:ring-orange-700 focus:border-orange-700 
                  outline-none transition-all resize-none bg-zinc-800 
                  text-white placeholder-gray-500"
-    />
-  </div>
+            />
+          </div>
 
-  {/* DIVISÃO + NÍVEL */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-    <div>
-      <label className="block font-semibold text-gray-300 mb-3">
-        Divisão *
-      </label>
-      <input
-        type="text"
-        required
-        value={dadosForm.divisao}
-        onChange={(e) => handleChange("divisao", e.target.value)}
-        placeholder="Ex: Pernas, Peito, Costas"
-        className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
+          {/* DIVISÃO + NÍVEL */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="block font-semibold text-gray-300 mb-3">
+                Divisão *
+              </label>
+              <input
+                type="text"
+                required
+                value={dadosForm.divisao}
+                onChange={(e) => handleChange("divisao", e.target.value)}
+                placeholder="Ex: Pernas, Peito, Costas"
+                className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
                    focus:ring-2 focus:ring-orange-700 focus:border-orange-700 
                    outline-none transition-all bg-zinc-800 
                    text-white placeholder-gray-500"
-      />
-    </div>
+              />
+            </div>
 
-    <div>
-      <label className="block font-semibold text-gray-300 mb-3">
-        Nível *
-      </label>
-      <input
-        type="text"
-        required
-        value={dadosForm.nivel}
-        onChange={(e) => handleChange("nivel", e.target.value)}
-        placeholder="Ex: Iniciante, Intermediário"
-        className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
+            <div>
+              <label className="block font-semibold text-gray-300 mb-3">
+                Nível *
+              </label>
+              <input
+                type="text"
+                required
+                value={dadosForm.nivel}
+                onChange={(e) => handleChange("nivel", e.target.value)}
+                placeholder="Ex: Iniciante, Intermediário"
+                className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
                    focus:ring-2 focus:ring-orange-700 focus:border-orange-700 
                    outline-none transition-all bg-zinc-800 
                    text-white placeholder-gray-500"
-      />
-    </div>
-  </div>
+              />
+            </div>
+          </div>
 
-  {/* DURAÇÃO */}
-  <div>
-    <label className="flex items-center gap-2 font-semibold text-gray-300 mb-3">
-      <Clock className="w-4 h-4 text-orange-600" />
-      Duração (horas) *
-    </label>
-    <input
-      type="number"
-      required
-      value={dadosForm.duracao}
-      onChange={(e) => handleChange("duracao", e.target.value)}
-      placeholder="1"
-      min="1"
-      className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
+          {/* DURAÇÃO */}
+          <div>
+            <label className="flex items-center gap-2 font-semibold text-gray-300 mb-3">
+              <Clock className="w-4 h-4 text-orange-600" />
+              Duração (horas) *
+            </label>
+            <input
+              type="number"
+              required
+              value={dadosForm.duracao}
+              onChange={(e) => handleChange("duracao", e.target.value)}
+              placeholder="1"
+              min="1"
+              className="w-full px-5 py-4 rounded-xl border-2 border-orange-700/25 
                  focus:ring-2 focus:ring-orange-700 focus:border-orange-700 
                  outline-none transition-all bg-zinc-800 
                  text-white placeholder-gray-500"
-    />
-  </div>
+            />
+          </div>
 
-  {/* BOTÕES */}
-  <div className="flex gap-4 pt-6">
-    <button
-      type="button"
-      onClick={onClose}
-      className="flex-1 px-6 py-4 bg-zinc-800 text-gray-300 rounded-xl 
+          {/* BOTÕES */}
+          <div className="flex gap-4 pt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-4 bg-zinc-800 text-gray-300 rounded-xl 
                  font-semibold hover:bg-zinc-700 transition-all 
                  border border-zinc-700"
-    >
-      Cancelar
-    </button>
-    <button
-      type="submit"
-      className="flex-1 px-6 py-4 bg-gradient-to-r from-orange-700 to-orange-800 
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-6 py-4 bg-gradient-to-r from-orange-700 to-orange-800 
                  text-white rounded-xl font-semibold hover:shadow-xl 
                  hover:shadow-orange-900/30 transition-all 
                  hover:scale-105 active:scale-95"
-    >
-      {treino ? "Atualizar Treino" : "Criar Treino"}
-    </button>
-  </div>
-</form>
+            >
+              {treino ? "Atualizar Treino" : "Criar Treino"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
