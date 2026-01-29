@@ -50,25 +50,16 @@ const adicionarTreino = async (treino: Treino) => {
 
 const atualizarTreino = async (treino: Treino) => {
   try {
-    const atualizado = await workoutsAPI.update(treino.id, {
-      exercicio: treino.exercicio,
-      divisao: treino.divisao,
-      nivel: treino.nivel,
-      duracao: treino.duracao,
-    });
-
+    const atualizado = await workoutsAPI.update(treino);
     setTreinos((prev) =>
       prev.map((t) => (t.id === atualizado.id ? atualizado : t))
     );
-
     setTreinoEmEdicao(null);
     setShowForm(false);
   } catch (error) {
     console.error("Erro ao atualizar treino:", error);
   }
 };
-
-
 
 
 const excluirTreino = async (id: number) => {
@@ -200,11 +191,15 @@ const excluirTreino = async (id: number) => {
           </div>
         )}
 
-<TreinoForm
-  treino={treinoEmEdicao}
-  onSave={treinoEmEdicao ? atualizarTreino : adicionarTreino}
-  onClose={fecharForm}
-/>
+{showForm && (
+  <TreinoForm
+    treino={treinoEmEdicao}
+    onSave={treinoEmEdicao ? atualizarTreino : adicionarTreino}
+    onClose={fecharForm}
+  />
+)}
+
+
 
       </div>
     </div>

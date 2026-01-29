@@ -64,7 +64,6 @@ export function Home() {
   };
 
   // Dados adicionais vindos do GitHub
-  const treinosConcluidos = treinos.filter((t) => t.concluido).length;
   const treinosSemana = treinos.filter((t) => {
     const date = new Date(t.data);
     const weekAgo = new Date();

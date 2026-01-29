@@ -34,7 +34,7 @@ const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
 
   const treinoFinal: Treino = {
-    id: treino?.id ?? 0,
+    ...treino, // mantém o id se existir
     exercicio: dadosForm.exercicio,
     divisao: dadosForm.divisao,
     nivel: dadosForm.nivel,
@@ -42,8 +42,10 @@ const handleSubmit = (e: React.FormEvent) => {
   };
 
   onSave(treinoFinal);
-  onClose();
+  onClose(); // fecha modal após salvar
 };
+
+
 
   const handleChange = (campo: string, valor: string | boolean) => {
     setDadosForm((prev) => ({ ...prev, [campo]: valor }));
