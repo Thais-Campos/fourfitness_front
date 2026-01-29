@@ -28,9 +28,9 @@ Projeto desenvolvido em **equipe**, no contexto de estudos e prática de desenvo
 - **Axios**
 - **React Toastify**
 - **React Spinners**
-- **Tailwind CSS** (se aplicável)
-- **Netlify** (deploy)
-
+- **Tailwind CSS** 
+- **Netlify**
+  
 ## 👩‍💻 Autoria
 Projeto desenvolvido em equipe, como parte de um projeto educacional.
 
